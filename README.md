@@ -1,7 +1,7 @@
 # LensVault
 
 A professional Android gallery application built with Kotlin, following a clean Xiaomi-inspired design language. Features adaptive grid layouts, a smooth fullscreen image slider with pinch-to-zoom, light/dark theme support, runtime permission handling.
-
+please remember to extract 7z file in order to view it's content
 ---
 
 ## Screenshots
