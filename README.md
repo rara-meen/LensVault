@@ -1,6 +1,6 @@
 # LensVault
 
-A professional Android gallery application built with Kotlin, following a clean Xiaomi-inspired design language. Features adaptive grid layouts, a smooth fullscreen image slider with pinch-to-zoom, light/dark theme support, runtime permission handling, and camera integration.
+A professional Android gallery application built with Kotlin, following a clean Xiaomi-inspired design language. Features adaptive grid layouts, a smooth fullscreen image slider with pinch-to-zoom, light/dark theme support, runtime permission handling.
 
 ---
 
@@ -17,7 +17,7 @@ A professional Android gallery application built with Kotlin, following a clean 
 - **Albums view** — Grouped by media bucket (Camera, WhatsApp, Screenshots, etc.) in a two-column card grid
 - **Fullscreen image slider** — ViewPager2-based swipe viewer with pinch-to-zoom (up to 5x), double-tap zoom, and drag-to-pan
 - **Immersive viewer UI** — Tap to hide/show top toolbar and bottom action bar with fade animation; full edge-to-edge rendering
-- **Camera integration** — FAB launches the device camera app; captured photos are saved via FileProvider and the gallery refreshes automatically
+automatically
 - **Share** — Native Android share sheet for sharing any photo
 - **Light and dark mode** — Full Material You theme support using `values/themes.xml` and `values-night/themes.xml`
 - **All screen sizes** — ConstraintLayout and CoordinatorLayout ensure correct rendering on phones, foldables, and tablets
@@ -118,7 +118,6 @@ Click **Sync Now** when Android Studio prompts for Gradle sync, then run on a ph
 |---|---|---|
 | `READ_MEDIA_IMAGES` | App launch (API 33+) | Read photos from device storage |
 | `READ_EXTERNAL_STORAGE` | App launch (API 26–32) | Read photos from device storage |
-| `CAMERA` | On camera FAB tap | Launch camera to take a new photo |
 
 The app uses a dedicated `PermissionActivity` as the launcher. It checks permissions at startup and routes to `GalleryActivity` only when access is granted. If permission is permanently denied, the user is directed to system App Settings.
 
@@ -134,25 +133,6 @@ Launch → PermissionActivity
 
 ---
 
-## Camera Integration
-
-Tapping the FAB launches the system camera app via `MediaStore.ACTION_IMAGE_CAPTURE`. The photo is saved to a temporary file in the app's external files directory using `FileProvider` (so the camera app can write to it without needing broad storage permission). On return, `GalleryViewModel.refreshMedia()` reloads the gallery.
-
-```kotlin
-// GalleryActivity.kt
-private fun launchCamera() {
-    val photoFile = createImageFile()
-    currentCameraImageUri = FileProvider.getUriForFile(
-        this, "${packageName}.fileprovider", photoFile
-    )
-    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-        putExtra(MediaStore.EXTRA_OUTPUT, currentCameraImageUri)
-    }
-    if (intent.resolveActivity(packageManager) != null) {
-        cameraLauncher.launch(intent)
-    }
-}
-```
 
 ---
 
@@ -220,7 +200,6 @@ implementation 'androidx.activity:activity-ktx:1.8.2'
 
 - Video files in media buckets are displayed as thumbnails but tapping them opens the image viewer (video playback is not implemented)
 - The pinch-to-zoom implementation uses `ImageView` scale transforms; for production, consider a library like [PhotoView](https://github.com/Baseflow/PhotoView) for boundary-clamped zoom with better fling physics
-- Photos taken by the camera are saved to the app's private external directory; they will not appear in other gallery apps unless you add `MediaScannerConnection.scanFile()`
 
 ---
 
